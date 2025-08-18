@@ -2,6 +2,61 @@
 
 This repository contains usage examples and datasheets for several commonly used sensors in hardware development. Each folder includes datasheets and simple example code (mostly in Arduino `.ino` format).
 
+## Prerequisites
+
+Before running any example code from this repository, make sure you have the following prerequisites:
+
+- **Arduino IDE** (latest version recommended)
+- **XIAO-ESP32S3** (e.g., Arduino Uno, Mega, Nano, or compatible)
+- **Required sensor hardware** (as listed in each section below)
+- **Corresponding Arduino libraries** (see each sensor/project section for details)
+
+### Project-Specific Prerequisites
+
+#### Blynx Projects
+
+- Arduino IDE
+- XIAO-ESP32S3 (compatible with Blynx)
+- DPS310 barometric pressure sensor
+- Blynx app installed on your mobile device
+- Blynx Arduino library (install via Arduino Library Manager)
+- DPS310 Arduino library (install via Arduino Library Manager)
+
+#### BME688-Gas Sensor
+
+- Arduino IDE
+- XIAO-ESP32S3
+- BME688 sensor module
+- Adafruit BME680/BME688 Arduino library (install via Arduino Library Manager)
+
+#### DPS310-Barometer
+
+- Arduino IDE
+- XIAO-ESP32S3
+- DPS310 barometric pressure sensor
+- Adafruit DPS310 Arduino library (install via Arduino Library Manager)
+
+#### Flame Sensor
+
+- Arduino IDE
+- XIAO-ESP32S3
+- Flame sensor module
+  (No special library required; uses digitalRead/analogRead)
+
+#### Grove-Water Level Sensor
+
+- Arduino IDE
+- XIAO-ESP32S3
+- Grove Water Level Sensor
+  (No special library required; uses analogRead)
+
+#### MCP9808-Temperature
+
+- Arduino IDE
+- XIAO-ESP32S3
+- MCP9808 temperature sensor module
+- Adafruit MCP9808 Arduino library (install via Arduino Library Manager)
+
 ## List of Sensors
 
 ## Additional Projects
