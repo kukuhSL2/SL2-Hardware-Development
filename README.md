@@ -4,6 +4,14 @@ This repository contains usage examples and datasheets for several commonly used
 
 ## List of Sensors
 
+## Additional Projects
+
+### Blynx Projects
+
+This section contains example projects using the Blynx platform for sensor integration and IoT applications.
+
+- **DPS310-Blynx/DPS310-Blynx.ino**: Example code for integrating the DPS310 barometric pressure sensor with Blynx, demonstrating remote monitoring or IoT connectivity.
+
 ### 1. BME688-Gas Sensor
 
 The BME688 is a digital gas sensor capable of detecting air quality, humidity, pressure, and temperature. This folder contains:
