@@ -17,10 +17,8 @@ Before running any example code from this repository, make sure you have the fol
 
 - Arduino IDE
 - XIAO-ESP32S3 (compatible with Blynx)
-- DPS310 barometric pressure sensor
 - Blynx app installed on your mobile device
 - Blynx Arduino library (install via Arduino Library Manager)
-- DPS310 Arduino library (install via Arduino Library Manager)
 
 #### BME688-Gas Sensor
 
