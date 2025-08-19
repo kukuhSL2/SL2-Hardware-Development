@@ -13,6 +13,13 @@ Before running any example code from this repository, make sure you have the fol
 
 ### Project-Specific Prerequisites
 
+#### Camera
+
+- Arduino IDE
+- XIAO-ESP32S3
+- Camera module compatible with XIAO-ESP32S3 (e.g., OV2640)
+- ESP32 Camera library (install via Arduino Library Manager)
+
 #### AMG6833-Infraredd
 
 - Arduino IDE
@@ -63,6 +70,12 @@ Before running any example code from this repository, make sure you have the fol
 - Adafruit MCP9808 Arduino library (install via Arduino Library Manager)
 
 ## List of Sensors
+
+### 7. Camera
+
+This section contains a simple example for using a camera module with the XIAO-ESP32S3 board.
+
+- **Camera-Simple/Camera-Simple.ino**: Simple example code for capturing images or video using a camera module on the XIAO-ESP32S3.
 
 ### 6. AMG6833-Infraredd
 
