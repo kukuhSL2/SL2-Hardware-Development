@@ -1,9 +1,12 @@
+
 #define BLYNK_TEMPLATE_NAME "WATER LEVEL ESP32"
 #define BLYNK_AUTH_TOKEN "-VB-Ir4Zg8T30XJBtiNQcAXZHN93HJdB"
 #define BLYNK_TEMPLATE_ID "TMPL6eNdoDhIz"
 
 #include <Wire.h>
+#include <Seeed_AMG8833_driver.h>
 #include <WiFi.h>
+
 #include <WiFiClient.h>
 #include <BlynkSimpleEsp32.h>
 
