@@ -13,6 +13,13 @@ Before running any example code from this repository, make sure you have the fol
 
 ### Project-Specific Prerequisites
 
+#### AMG6833-Infraredd
+
+- Arduino IDE
+- XIAO-ESP32S3
+- AMG6833/AMG88 infrared sensor module
+- Adafruit AMG88xx Arduino library (install via Arduino Library Manager)
+
 #### Blynx Projects
 
 - Arduino IDE
@@ -56,6 +63,13 @@ Before running any example code from this repository, make sure you have the fol
 - Adafruit MCP9808 Arduino library (install via Arduino Library Manager)
 
 ## List of Sensors
+
+### 6. AMG6833-Infraredd
+
+The AMG6833 (or AMG88) is an infrared thermal sensor capable of detecting temperature distribution in a 2D area (thermal imaging). This folder contains:
+
+- **panasonic_04262016_AMG88.pdf**: Official datasheet for the AMG88/AMG6833 infrared sensor.
+- **AMG688-Simple/AMG688-Simple.ino**: Simple example code for reading thermal data from the sensor using Arduino.
 
 ## Additional Projects
 
