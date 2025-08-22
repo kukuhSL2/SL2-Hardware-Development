@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Climate Dashboard SL2 Global</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto,
+          sans-serif;
+        margin: 0;
+        background: #0b1220;
+        color: #e6e8ee;
+      }
+      header {
+        padding: 18px 20px;
+        border-bottom: 1px solid #1f2a44;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .badge {
+        background: #1f2a44;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        color: #9fb3ff;
+      }
+      main {
+        padding: 20px;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 16px;
+      }
+      .card {
+        background: #0f172a;
+        border: 1px solid #1f2a44;
+        border-radius: 16px;
+        padding: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+      .col-4 {
+        grid-column: span 4;
+      }
+      .col-8 {
+        grid-column: span 8;
+      }
+      .title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .metric {
+        font-size: 36px;
+        font-weight: 700;
+      }
+      .sub {
+        color: #9aa4bf;
+        font-size: 12px;
+      }
+      button {
+        background: #243b6b;
+        color: #e6e8ee;
+        border: 1px solid #2f4a80;
+        padding: 10px 14px;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .muted {
+        color: #97a0b8;
+        font-size: 13px;
+      }
+      .row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      pre {
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: #0b1220;
+        border: 1px solid #1f2a44;
+        padding: 12px;
+        border-radius: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="row">
+        <div style="font-weight: 700; font-size: 18px">
+          Climate Dashboard SL2 Global
+        </div>
+        <div class="badge">Made By &hearts;</div>
+      </div>
+      <div class="muted">Live from /ingest • Bandung West Java</div>
+    </header>
+
+    <main>
+      <div class="grid">
+        <div class="card col-4">
+          <div class="title">Temperature</div>
+          <div class="metric" id="tempMetric">—</div>
+          <div class="sub" id="tempSub">last update: —</div>
+        </div>
+        <div class="card col-4">
+          <div class="title">Humidity</div>
+          <div class="metric" id="humMetric">—</div>
+          <div class="sub" id="humSub">relative humidity</div>
+        </div>
+        <div class="card col-4">
+          <div class="title">Water Level</div>
+          <div class="metric" id="waterMetric">—</div>
+          <div class="sub" id="waterSub">for flood early warning</div>
+        </div>
+
+        <div class="card col-8">
+          <div class="title">Temperature Trend (last ~200 points)</div>
+          <canvas id="tempChart" height="140"></canvas>
+        </div>
+        <div class="card col-4">
+          <div class="title">Heat Advisor</div>
+          <div class="row">
+            <button id="getAdviceBtn">Get Heat Advice</button>
+            <span class="muted">uses llama-3.1-70b-versatile</span>
+          </div>
+          <div style="margin-top: 10px" class="muted">Summary</div>
+          <pre id="adviceBox">—</pre>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const socket = io();
+      const tempMetric = document.getElementById("tempMetric");
+      const tempSub = document.getElementById("tempSub");
+      const humMetric = document.getElementById("humMetric");
+      const waterMetric = document.getElementById("waterMetric");
+      const adviceBtn = document.getElementById("getAdviceBtn");
+      const adviceBox = document.getElementById("adviceBox");
+
+      const labels = [];
+      const temps = [];
+
+      const ctx = document.getElementById("tempChart").getContext("2d");
+      const chart = new Chart(ctx, {
+        type: "line",
+        data: { labels, datasets: [{ label: "°C", data: temps }] },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: true } },
+          scales: { x: { display: false }, y: { beginAtZero: false } },
+        },
+      });
+
+      function pushPoint(ts, t) {
+        labels.push(new Date(ts).toLocaleTimeString());
+        temps.push(t);
+        if (labels.length > 200) {
+          labels.shift();
+          temps.shift();
+        }
+        chart.update();
+      }
+
+      function updateCards(r) {
+        tempMetric.textContent = (r.temperature ?? "—") + "°C";
+        tempSub.textContent =
+          "last update: " + new Date(r.ts).toLocaleTimeString();
+        humMetric.textContent = (r.humidity ?? "—") + "%";
+        waterMetric.textContent = r.waterLevel ?? "—";
+      }
+
+      socket.on("bootstrap", ({ history }) => {
+        if (history && history.length) {
+          history.forEach((r) => {
+            if (r.temperature != null) pushPoint(r.ts, r.temperature);
+          });
+          updateCards(history[history.length - 1]);
+        }
+      });
+
+      socket.on("reading", (r) => {
+        if (r.temperature != null) pushPoint(r.ts, r.temperature);
+        updateCards(r);
+      });
+
+      adviceBtn.onclick = async () => {
+        adviceBtn.disabled = true;
+        adviceBox.textContent = "Thinking…";
+        try {
+          const latest = await fetch("/data/history").then((r) => r.json());
+          const last = latest.history?.length
+            ? latest.history[latest.history.length - 1]
+            : null;
+          const temperature = last?.temperature ?? 32; // fallback
+          const humidity = last?.humidity ?? 70;
+          const resp = await fetch("/advice/heat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ temperature, humidity }),
+          });
+          const data = await resp.json();
+          adviceBox.textContent = data.ok
+            ? data.text
+            : data.error || "No advice";
+        } catch (e) {
+          adviceBox.textContent = e.message;
+        } finally {
+          adviceBtn.disabled = false;
+        }
+      };
+    </script>
+  </body>
+</html>
